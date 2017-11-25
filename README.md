@@ -4,9 +4,9 @@ An OSINT tool that allows you to draw out relationships between people on Linked
 
 Check out the [example](https://raw.githubusercontent.com/eth0izzle/the-endorser/master/example/output.pdf), which is based on mine and my colleagues (David Prince) LinkedIn profile. By glancing at the visualisation you can easily see there is some sort of relationship between us and "Zoë Rose" (we all work together on the same team in this case). If I was carrying out an investigation I would focus my efforts towards her next.
 
-![The Endorser Example](https://raw.githubusercontent.com/eth0izzle/the-endorser/master/example/screenshot.png)
+![Example](https://raw.githubusercontent.com/eth0izzle/the-endorser/master/example/example.png)
 
-Due to the way LinkedIn's privacy settings work this tool works best when your target is within your 3rd degree network or higher. If you are performing LinkedIn OSINT I'd highly recommend a LinkedIn Recruiter account.
+Due to the way LinkedIn's privacy settings work this tool works best when your target is within your 3rd degree network or higher. If you are performing LinkedIn OSINT I'd highly recommend using a LinkedIn Recruiter account.
 
 ## Installation
 
@@ -17,11 +17,9 @@ You can then install The Endorser in 4 simple steps:
 1. `git clone https://github.com/eth0izzle/the-endorser.git`
 2. `sudo pip3 install -r requirements.txt`
 3. Setup your LinkedIn credentials in `config.yaml`
-4. `python3 the-endorser.py`
+4. `python3 the-endorser.py <profile1> <profile2>`
 
 ## Usage
-
-`python3 the-endorser.py <profile1> <profile2> <etc..>`
 
     usage: python the-endorser.py https://www.linkedin.com/in/user1 https://www.linkedin.com/in/user2
 
@@ -36,15 +34,13 @@ You can then install The Endorser in 4 simple steps:
                             Specify the path of the config.yaml file (default:
                             /Users/p/Code/the-endorser/config.yaml)
       --output OUTPUT       Output module to visualise the relationships: digraph,
-                            stdout (default: stdout)
+                            stdout (default: digraph)
       --log LOG             Path of log file. None for stdout. (default: None)
       --log-level LOG_LEVEL
                             Logging output level: DEBUG, INFO, WARNING, ERROR.
                             (default: INFO)
 
 Currently we only have one output (digraph). Square box = skill, ellipse = person. It's best to read this from right-to-left and identify and people that have arrows from multiple profiles.
-
-![Example](https://raw.githubusercontent.com/eth0izzle/the-endorser/master/example/example.png)
 
 ## Contributing
 
