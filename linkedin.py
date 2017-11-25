@@ -23,7 +23,8 @@ class LinkedInClient:
         self.save_cookie = save_cookie
 
     def __enter__(self):
-        self.__login()
+        # dirty hack, for some reason `add_cookie()` doesn't work in phantomjs
+        self.__login(True if self.webdriver.capabilities['browserName'] == 'phantomjs' else False)
 
         return self
 

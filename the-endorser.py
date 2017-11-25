@@ -1,13 +1,12 @@
 import sys, os, argparse, logging
-import config
-import outputs
+import config, outputs, drivers
 from urllib.parse import urlparse
-from drivers import chromedriver
 from linkedin import LinkedInClient
 
 
 if __name__ == '__main__':
-    available_output_modules = ", ".join(outputs._discover_output_modules().keys())
+    available_output_modules = ", ".join(outputs.discover_output_modules().keys())
+    available_drivers = ", ".join(drivers.discover_drivers().keys())
 
     parser = argparse.ArgumentParser(description="Maps out relationships between peoples endorsements on LinkedIn.",
                                      usage="python the-endorser.py https://www.linkedin.com/in/user1 https://www.linkedin.com/in/user2",
@@ -15,6 +14,8 @@ if __name__ == '__main__':
     parser.add_argument("profiles", nargs="+", help="Space separated list of LinkedIn profile URLs to map")
     parser.add_argument("--config_file", dest="config_file", default=os.path.join(os.getcwd(), 'config.yaml'),
                         help="Specify the path of the config.yaml file")
+    parser.add_argument("--driver", dest="driver", default="chromedriver",
+                        help="Selenium WebDriver to use to parse the webpages: %s " % available_drivers)
     parser.add_argument("--output", dest="output", default="digraph",
                         help="Output module to visualise the relationships: %s " % available_output_modules)
     parser.add_argument("--log", dest="log", default=None,
@@ -25,11 +26,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     config = config.load(args.config_file)
     output_module = outputs.get_output_module_by_name(args.output)
+    driver = drivers.get_driver_by_name(args.driver)
     logging.basicConfig(level=getattr(logging, args.log_level.upper(), None), handlers={
         logging.StreamHandler(sys.stdout) if args.log is None else logging.FileHandler(filename=args.log)
     })
 
-    with LinkedInClient(config.email, config.password, webdriver=chromedriver.get(config.drivers), save_cookie=config.save_cookie) as client:
+    with LinkedInClient(config.email, config.password, webdriver=driver.get(config), save_cookie=config.save_cookie) as client:
         profiles = list()
 
         for profile in args.profiles:

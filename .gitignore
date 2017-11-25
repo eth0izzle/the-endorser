@@ -5,3 +5,5 @@ __pycache__
 .cookies.pkl
 ghostdriver.log
 *.pyc
+drivers/chromedriver
+drivers/phantomjs

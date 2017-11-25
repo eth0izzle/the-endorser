@@ -3,4 +3,5 @@ password: ''
 save_cookie: True
 
 drivers:
-  chrome: '{{cwd}}/drivers/chromedriver'
+  chromedriver: '{{cwd}}/drivers/chromedriver'
+  phantomjs: '{{cwd}}/drivers/phantomjs'
