@@ -1,0 +1,6 @@
+email: ''
+password: ''
+save_cookie: True
+
+drivers:
+  chrome: '{{cwd}}/drivers/chromedriver'

@@ -1,0 +1,7 @@
+.DS_Store
+.idea
+.virtualenv
+__pycache__
+.cookies.pkl
+ghostdriver.log
+*.pyc
