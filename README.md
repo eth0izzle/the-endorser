@@ -18,6 +18,11 @@ The Endorser will work on pretty much any *nix (Linux, Mac, BSD) system with Pyt
 4. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) for your platform (requires Chrome) and place in ./drivers. Alternatively you can use [PhantomJS](http://phantomjs.org/download.html) and launch with the `--driver phantomjs` flag (*note phantomjs is 8x slower*).
 5. `python3 the-endorser.py <profile1> <profile2>`
 
+### macOS Caveats
+1. Install Homebrew - `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+2. Install pip3 - `brew install pip3`
+3. Install Graphviz - `brew install graphviz`
+
 ## Usage
 
     usage: python the-endorser.py https://www.linkedin.com/in/user1 https://www.linkedin.com/in/user2
