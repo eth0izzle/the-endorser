@@ -14,9 +14,10 @@ The Endorser will work on pretty much any *nix (Linux, Mac, BSD) system with Pyt
 
 1. `git clone https://github.com/eth0izzle/the-endorser.git`
 2. `sudo pip3 install -r requirements.txt`
-3. Setup your LinkedIn credentials in `config.yaml`
+3. Install Graphviz via your package manager, e.g. `apt-get install graphviz` or `brew install graphviz`
 4. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) for your platform (requires Chrome) and place in ./drivers. Alternatively you can use [PhantomJS](http://phantomjs.org/download.html) and launch with the `--driver phantomjs` flag (*note phantomjs is 8x slower*).
-5. `python3 the-endorser.py <profile1> <profile2>`
+5. Setup your LinkedIn credentials in `config.yaml`
+6. `python3 the-endorser.py <profile1> <profile2>`
 
 ## Usage
 
