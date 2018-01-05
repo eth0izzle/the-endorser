@@ -2,6 +2,7 @@ import glob, imp, os
 
 IPHONE_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/14A403 Safari/602.1"
 
+
 def discover_drivers():
     cdir = os.path.dirname(os.path.realpath(__file__))
     drivers = list(filter(lambda p: not os.path.basename(p).startswith('_'), glob.glob(os.path.join(cdir, '*.py'))))

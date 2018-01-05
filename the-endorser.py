@@ -35,7 +35,7 @@ if __name__ == '__main__':
         profiles = list()
 
         for profile in args.profiles:
-            profile_url = urlparse(profile)
+            profile_url = urlparse(profile.strip())
 
             if "linkedin.com" not in profile_url.netloc and "in/" not in profile_url.path:
                 raise ValueError("%s is not a valid LinkedIn profile URL", profile)

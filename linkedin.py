@@ -12,7 +12,7 @@ class LinkedInClient:
     LOGIN_URL = "https://www.linkedin.com/uas/login"
     COOKIE_JAR = os.path.join(os.getcwd(), ".cookies.pkl")
 
-    def __init__(self, email, password, webdriver=None, timeout=3, save_cookie=True):
+    def __init__(self, email, password, webdriver=None, timeout=5, save_cookie=True):
         if webdriver is None:
             raise ValueError('You must specify a webdriver')
 
@@ -55,9 +55,9 @@ class LinkedInClient:
             wait = WebDriverWait(self.webdriver, self.timeout)
             wait.until_not(lambda driver: driver.current_url == LinkedInClient.LOGIN_URL)
 
-            user_id = re.search("\"publicIdentifier\":\"(.*?)\"", self.webdriver.page_source)
+            user_id = self.__get_user_id()
             if user_id is not None:
-                logging.info("Successfully logged in to LinkedIn. Identifier: %s", user_id.group(1))
+                logging.info("Successfully logged in to LinkedIn. Identifier: %s", user_id)
 
                 # save cookies for next time - delicious
                 if self.save_cookie:
@@ -75,22 +75,32 @@ class LinkedInClient:
 
         # dismiss the "view with the app" bullshit (we're using iOS UA)
         try:
-            self.scroll_to_bottom()
+            self.__scroll_to_bottom()
             self.webdriver.find_element_by_css_selector("button.pv-gta-overlay__dismiss").click()
         except (NoSuchElementException, ElementNotVisibleException):
             pass
 
-        user_id = re.search("\"publicIdentifier\":\"(.*?)\"", self.webdriver.page_source)
+        # check we are logged in
+        user_id = self.__get_user_id()
         if user_id is None:
-            logging.warning("Cookie has expired, logging in again...")
+            logging.warning("Cookies have expired, attempting to log in again...")
             self.__login(bypass_cookies=True)
 
+        # check if the profile is valid
+        try:
+            self.webdriver.find_element_by_css_selector(".profile-unavailable")
+            logging.error("{} appears to be an invalid LinkedIn profile.".format(profile_url))
+            return
+        except NoSuchElementException:
+            pass
+
         name = self.webdriver.find_element_by_class_name("pv-top-card-section__name").text
-        dist = "self" if user_id.group(1) in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-section__distance-badge .dist-value").text.strip()
+        dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-section__distance-badge .dist-value").text.strip()
 
         if dist is "":
             logging.warning("%s is not in your network. We may not be able to retrieve any endorsements...", name)
 
+        # do we have any endorsements to parse?
         try:
             self.webdriver.find_element_by_css_selector("button.pv-skills-section__additional-skills").click()
             self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector(".pv-featured-skills-section"))
@@ -111,7 +121,7 @@ class LinkedInClient:
 
             waiter = WebDriverWait(self.webdriver, self.timeout)
             waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".pv-profile-detail__content")))
-            self.scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
+            self.__scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
 
             endorsers = list()
             for endorser_element in self.webdriver.find_elements_by_css_selector(".pv-endorsement-entity__link"):
@@ -124,7 +134,7 @@ class LinkedInClient:
 
         return {"name": name, "skills": skills}
 
-    def scroll_to_bottom(self, element=None, timeout=0.5):
+    def __scroll_to_bottom(self, element=None, timeout=0.5):
         def get_height():
             return self.webdriver.execute_script("return document.body.scrollHeight") if element is None else self.webdriver.execute_script("return arguments[0].scrollHeight", element);
 
@@ -143,3 +153,15 @@ class LinkedInClient:
                 break
 
             last_height = new_height
+
+    def __get_user_id(self):
+        matches = re.search("{\"request\":\"/voyager/api/me\",\"status\":200,\"body\":\"(.*?)\"}", self.webdriver.page_source)
+
+        if matches is not None:
+            voyager_me = self.webdriver.find_element_by_id(matches.group(1)).get_attribute("innerHTML")
+            user_matcher = re.search("\"publicIdentifier\":\"(.*?)\"", voyager_me)
+
+            if user_matcher is not None:
+                return user_matcher.group(1)
+
+        return None
