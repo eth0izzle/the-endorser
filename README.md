@@ -17,7 +17,7 @@ All you need it Python 3.4+ and do the following:
 3. Install Graphviz via your package manager, e.g. `apt-get install graphviz` or `brew install graphviz`
 4. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) for your platform (requires Chrome) and place in ./drivers. Alternatively you can use [PhantomJS](http://phantomjs.org/download.html) and launch with the `--driver phantomjs` flag (*note phantomjs is 8x slower*).
 5. Setup your LinkedIn credentials in `config.yaml`
-6. `python3 the-endorser.py <profile1> <profile2>`
+6. `python3 the-endorser.py <profile1> <profile2> <profile3> <etc..> <etc..>`
 
 ## Usage
 
@@ -46,11 +46,11 @@ All you need it Python 3.4+ and do the following:
 
 The Endorser is "modular" in the sense that it can output and visualise the data in different ways. An output module just needs one method: `def run(profiles)`
 
-Currently there is only one output module (digraph). In the future I plan to add modules for Maltego and Plot.ly - but feel free to get involved!
+Currently there is only one output module (digraph). In the future I plan to add modules for Maltego and Plot.ly - but feel free to [get involved]((https://github.com/eth0izzle/the-enforcer/issues)!
 
 #### Digraph
 
-It's best to read the graph from right-to-left, identifying people that have a large collection of "arrows" from multiple profiles. Square box = skill, ellipse = person.
+It's best to read the graph from right-to-left, identifying people that have a large collection of "arrows" from multiple profiles (different colours). Square box = skill, ellipse = person.
 
 ## Contributing
 
