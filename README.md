@@ -46,7 +46,7 @@ All you need it Python 3.4+ and do the following:
 
 The Endorser is "modular" in the sense that it can output and visualise the data in different ways. An output module just needs one method: `def run(profiles)`
 
-Currently there is only one output module (digraph). In the future I plan to add modules for Maltego and Plot.ly - but feel free to [get involved]((https://github.com/eth0izzle/the-enforcer/issues)!
+Currently there is only one output module (digraph). In the future I plan to add modules for Maltego and Plot.ly - but feel free to [get involved](https://github.com/eth0izzle/the-enforcer/issues)!
 
 #### Digraph
 
