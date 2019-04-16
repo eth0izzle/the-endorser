@@ -47,9 +47,9 @@ class LinkedInClient:
             except FileNotFoundError:
                 pass
 
-        self.webdriver.find_element_by_id("session_key-login").send_keys(self.email)
-        self.webdriver.find_element_by_name("session_password").send_keys(self.password)
-        self.webdriver.find_element_by_name("login").submit()
+        self.webdriver.find_element_by_id("username").send_keys(self.email)
+        self.webdriver.find_element_by_id("password").send_keys(self.password)
+        self.webdriver.find_element_by_css_selector(".login__form_action_container button").submit()
 
         try:
             wait = WebDriverWait(self.webdriver, self.timeout)
@@ -103,32 +103,42 @@ class LinkedInClient:
         # do we have any endorsements to parse?
         try:
             self.webdriver.find_element_by_css_selector("button.pv-skills-section__additional-skills").click()
-            self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector(".pv-featured-skills-section"))
+            self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector(".pv-skill-categories-section__top-skills"))
             self.webdriver.execute_script("window.scrollBy(0, -200);") # backin' up, backin' up
         except NoSuchElementException:
             logging.error("%s doesn't have any endorsements or has hidden them!", name)
             return
 
-        skills_elements = self.webdriver.find_elements_by_css_selector("li.pv-skill-entity a.featured-skill-entity-wrapper,a.-skill-entity-wrapper")
-        endorsements_counts = list(int(re.sub(r"\D", "", element.find_element_by_class_name("pv-skill-entity__endorsement-count").text)) for element in skills_elements)
-        logging.info("Fetching %s endorsements from %s skills for %s (%s).", sum(endorsements_counts), len(skills_elements), name, ("0" if dist == "" else dist) if dist is not None else "self")
+        skills_elements = self.webdriver.find_elements_by_css_selector("li.pv-skill-category-entity")
+        logging.info("Fetching %s skills for %s (%s).", len(skills_elements), name, ("0" if dist == "" else dist) if dist is not None else "self")
 
         for element in skills_elements:
-            skill_name = element.find_element_by_class_name("pv-skill-entity__skill-name ").text
-
-            ActionChains(self.webdriver).key_down(Keys.SHIFT).click(element).key_up(Keys.SHIFT).perform()
-            self.webdriver.switch_to_window(self.webdriver.window_handles[-1])
-
-            waiter = WebDriverWait(self.webdriver, self.timeout)
-            waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".pv-profile-detail__content")))
-            self.__scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
-
+            skill_name_element = element.find_element_by_class_name("pv-skill-category-entity__name")
+            skill_name = skill_name_element.text
             endorsers = list()
-            for endorser_element in self.webdriver.find_elements_by_css_selector(".pv-endorsement-entity__link"):
-                endorsers.append(endorser_element.find_element_by_css_selector(".pv-endorsement-entity__name--has-hover").text)
+            endorsement_count = 0
 
-            self.webdriver.close()
-            self.webdriver.switch_to_window(profile_handle)
+            try:
+                endorsement_count = int(re.sub(r"\D", "", element.find_element_by_class_name("pv-skill-category-entity__endorsement-count").text))
+            except NoSuchElementException:
+                pass
+
+            if endorsement_count > 0:
+                logging.info("Processing %s (%s endorsements).", skill_name, endorsement_count)
+
+                skill_anchor = skill_name_element.find_element_by_tag_name('a')
+                ActionChains(self.webdriver).key_down(Keys.SHIFT).click(skill_anchor).key_up(Keys.SHIFT).perform()
+                self.webdriver.switch_to_window(self.webdriver.window_handles[-1])
+
+                waiter = WebDriverWait(self.webdriver, self.timeout)
+                waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".pv-profile-detail__content")))
+                self.__scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
+
+                for endorser_element in self.webdriver.find_elements_by_css_selector(".pv-endorsement-entity__link"):
+                    endorsers.append(endorser_element.find_element_by_css_selector(".pv-endorsement-entity__name--has-hover").text)
+
+                self.webdriver.close()
+                self.webdriver.switch_to_window(profile_handle)
 
             skills.append({"name": skill_name, "endorsements": len(endorsers), "endorsers": endorsers})
 

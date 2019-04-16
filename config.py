@@ -32,6 +32,9 @@ class ConfigDict(object):
         except KeyError:
             raise AttributeError
 
+    def get(self, attr):
+        return self.__getattr__(attr)
+
 
 def load(config_path):
     with open(config_path, 'r') as config_file:

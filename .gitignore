@@ -7,3 +7,6 @@ ghostdriver.log
 *.pyc
 drivers/chromedriver
 drivers/phantomjs
+drivers/chromedriver.exe
+drivers/phantomjs.exe
+config.yaml

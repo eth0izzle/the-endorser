@@ -31,7 +31,11 @@ if __name__ == '__main__':
         logging.StreamHandler(sys.stdout) if args.log is None else logging.FileHandler(filename=args.log)
     })
 
-    with LinkedInClient(config.email, config.password, webdriver=driver.get(config), save_cookie=config.save_cookie) as client:
+    driver_path = os.path.normpath(config.drivers.get(args.driver))
+    if os.name == 'nt':
+        driver_path += '.exe'
+
+    with LinkedInClient(config.email, config.password, webdriver=driver.get(driver_path), save_cookie=config.save_cookie) as client:
         profiles = list()
 
         for profile in args.profiles:

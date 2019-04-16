@@ -14,7 +14,7 @@ All you need it Python 3.4+ and do the following:
 
 1. `git clone https://github.com/eth0izzle/the-endorser.git`
 2. `sudo pip3 install -r requirements.txt`
-3. Install Graphviz via your package manager, e.g. `apt-get install graphviz` or `brew install graphviz`
+3. Install Graphviz from https://www.graphviz.org/download/ or via your package manager, e.g. `apt-get install graphviz` or `brew install graphviz` or `choco install graphiz`
 4. Download [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) for your platform (requires Chrome) and place in ./drivers. Alternatively you can use [PhantomJS](http://phantomjs.org/download.html) and launch with the `--driver phantomjs` flag (*note phantomjs is 8x slower*).
 5. Setup your LinkedIn credentials in `config.yaml`
 6. `python3 the-endorser.py <profile1> <profile2> <profile3> <etc..> <etc..>`
@@ -62,11 +62,6 @@ Check out the [issue tracker](https://github.com/eth0izzle/the-enforcer/issues) 
 4. Commit your changes: `git commit -am 'Add some feature'`
 5. Push to the branch: `git push origin my-new-feature`
 6. Submit a [pull request](https://github.com/eth0izzle/the-endorser/pulls)
-
-## History
-
-**v1.0**
-Initial release
 
 ## License
 
