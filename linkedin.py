@@ -94,8 +94,9 @@ class LinkedInClient:
         except NoSuchElementException:
             pass
 
-        name = self.webdriver.find_element_by_class_name("pv-top-card-section__name").text
-        dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-section__distance-badge .dist-value").text.strip()
+        time.sleep(100)
+        name = self.webdriver.find_element_by_css_selector(".pv-top-card-v3--list > li").text
+        dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-v3__distance-badge .dist-value").text.strip()
 
         if dist is "":
             logging.warning("%s is not in your network. We may not be able to retrieve any endorsements...", name)
