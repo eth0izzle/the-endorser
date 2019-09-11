@@ -40,6 +40,9 @@ class LinkedInClient:
                 cookies = pickle.load(open(LinkedInClient.COOKIE_JAR, "rb"))
                 if cookies:
                     for cookie in cookies:
+                        if 'expiry' in cookie:
+                            del cookie['expiry']
+                            
                         self.webdriver.add_cookie(cookie)
 
                     logging.info("Attempting to log in with saved cookies from %s ", LinkedInClient.COOKIE_JAR)
@@ -94,7 +97,7 @@ class LinkedInClient:
         except NoSuchElementException:
             pass
 
-        time.sleep(100)
+        time.sleep(1)
         name = self.webdriver.find_element_by_css_selector(".pv-top-card-v3--list > li").text
         dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-v3__distance-badge .dist-value").text.strip()
 
