@@ -169,7 +169,7 @@ class LinkedInClient:
             last_height = new_height
 
     def __get_user_id(self):
-        matches = re.search("{\"request\":\"/voyager/api/me\",\"status\":200,\"body\":\"(.*?)\"}", self.webdriver.page_source)
+        matches = re.search("{\"request\":\"/voyager/api/me\",\"status\":200,\"body\":\"(.*?)\",\"method\":\"GET\"}", self.webdriver.page_source)
 
         if matches is not None:
             voyager_me = self.webdriver.find_element_by_id(matches.group(1)).get_attribute("innerHTML")
