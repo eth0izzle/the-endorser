@@ -1,3 +1,5 @@
+# 🚨 The Endorser is no longer maintained. If you need support or consultation for your OSINT endeavours, drop me an e-mail paul@darkport.co.uk 🚨
+
 # The Endorser
 
 An OSINT tool that allows you to draw out relationships between people on LinkedIn via endorsements/skills.
